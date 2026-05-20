@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Café Andino S.A.S — De nuestra tierra a tu mesa</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400&family=DM+Serif+Display&family=Caveat:wght@400;600&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&family=Instrument+Serif:ital@0;1&family=Bricolage+Grotesque:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+
+<style>
+  :root {
+    --c-bg: #f5efe4;
+    --c-bg-warm: #ede4d3;
+    --c-paper: #faf6ed;
+    --c-ink: #2a1a10;
+    --c-ink-soft: #4a3527;
+    --c-ink-mute: #8a7563;
+    --c-line: #d8c8b0;
+    --c-line-soft: #e6dac2;
+    --c-accent: #7a4a2b;       /* tierra / cacao */
+    --c-accent-deep: #4a2818;
+    --c-cream: #d9b382;
+    --c-leaf: #5a6b3a;
+    --c-roast: #3a2418;
+    --c-warn: #b8541f;
+
+    --r-sm: 4px;
+    --r-md: 10px;
+    --r-lg: 18px;
+    --r-pill: 999px;
+
+    --t-display: 'DM Serif Display', 'Cormorant Garamond', Georgia, serif;
+    --t-serif: 'Cormorant Garamond', Georgia, serif;
+    --t-script: 'Caveat', cursive;
+    --t-sans: 'Plus Jakarta Sans', ui-sans-serif, system-ui, sans-serif;
+    --t-instr: 'Instrument Serif', Georgia, serif;
+  }
+
+  [data-theme="dark"] {
+    --c-bg: #1a120c;
+    --c-bg-warm: #221710;
+    --c-paper: #2a1d14;
+    --c-ink: #f4e8d4;
+    --c-ink-soft: #d4c2a4;
+    --c-ink-mute: #9a8770;
+    --c-line: #4a3527;
+    --c-line-soft: #382518;
+    --c-accent: #d9b382;
+    --c-accent-deep: #c9a06a;
+    --c-cream: #f4e8d4;
+    --c-leaf: #8aa05a;
+    --c-roast: #f4e8d4;
+    --c-warn: #e07a3a;
+  }
+
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+  body {
+    background: var(--c-bg);
+    color: var(--c-ink);
+    font-family: var(--t-sans);
+    font-size: 16px;
+    line-height: 1.55;
+    -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
+  }
+  img { max-width: 100%; display: block; }
+  a { color: inherit; text-decoration: none; }
+  button { font-family: inherit; cursor: pointer; }
+
+  /* paper grain texture */
+  .grain {
+    position: fixed; inset: 0; pointer-events: none; z-index: 1;
+    opacity: .35; mix-blend-mode: multiply;
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='240' height='240'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0.16  0 0 0 0 0.10  0 0 0 0 0.06  0 0 0 0.4 0'/></filter><rect width='100%25' height='100%25' filter='url(%23n)' opacity='0.55'/></svg>");
+  }
+  [data-theme="dark"] .grain { mix-blend-mode: screen; opacity: .15; }
+
+  #root { position: relative; z-index: 2; }
+</style>
+</head>
+<body>
+  <div class="grain"></div>
+  <div id="root"></div>
+
+  <script>
+    // Cache-buster: el navegador cachea los .jsx en memoria y no revalida con
+    // el servidor. Un timestamp único por carga obliga a re-descargarlos siempre,
+    // así cualquier cambio en los .jsx se ve al recargar. document.write mantiene
+    // el orden (tweaks → logo → sections → app) que Babel necesita.
+    (function () {
+      var v = '?t=' + Date.now();
+      ['tweaks-panel.jsx', 'logo.jsx', 'sections.jsx', 'app.jsx'].forEach(function (f) {
+        document.write('<script type="text/babel" src="' + f + v + '"><\/script>');
+      });
+    })();
+  </script>
+</body>
+</html>

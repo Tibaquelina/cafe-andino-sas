@@ -1,0 +1,29 @@
+# Archivos del sistema
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# Editor / IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Claude Code (configuración local, no compartir)
+.claude/
+
+# Servidor de desarrollo local (no se usa en Vercel)
+serve.py
+
+# Bundle original del diseño (incluye chats privados, no se publica)
+_design_extract/
+
+# Backups locales de imágenes
+img/*_old.jpg
+img/*_prev.jpg
+img/*_original.jpg
+img/*_v1_old.jpg
+img/*_v2_old.jpg
+
+# Carpeta de Vercel (cache local del CLI)
+.vercel/
