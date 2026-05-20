@@ -256,37 +256,44 @@ function HeroEditorial({ ctaStyle }) {
           </div>
         </div>
 
-        <div style={{ position: 'relative', marginBottom: isMobile ? 32 : 0 }}>
+        <div>
+          <div style={{ position: 'relative', marginBottom: isMobile ? 28 : 36 }}>
+            <div style={{
+              aspectRatio: isMobile ? '4/3' : '4/5',
+              borderRadius: 'var(--r-lg)', overflow: 'hidden',
+              background: `url(${UNSPLASH.hero1}) center/cover`,
+              boxShadow: '0 30px 80px -30px rgba(74,40,24,.45)',
+              transform: isMobile ? 'none' : 'rotate(1.5deg)',
+            }} />
+            <div style={{
+              position: 'absolute',
+              bottom: isMobile ? -20 : -28,
+              left: isMobile ? -8 : -32,
+              width: isMobile ? 110 : 180,
+              aspectRatio: '1/1', borderRadius: 'var(--r-lg)', overflow: 'hidden',
+              background: `url(${UNSPLASH.hands}) center/cover`,
+              boxShadow: '0 20px 50px -20px rgba(74,40,24,.4)',
+              transform: 'rotate(-4deg)',
+              border: '6px solid var(--c-bg)',
+            }} />
+          </div>
+
+          {/* Caption editorial — debajo de la imagen, sin encimarse */}
           <div style={{
-            aspectRatio: isMobile ? '4/3' : '4/5',
-            borderRadius: 'var(--r-lg)', overflow: 'hidden',
-            background: `url(${UNSPLASH.hero1}) center/cover`,
-            boxShadow: '0 30px 80px -30px rgba(74,40,24,.45)',
-            transform: isMobile ? 'none' : 'rotate(1.5deg)',
-          }} />
-          <div style={{
-            position: 'absolute',
-            bottom: isMobile ? -20 : -28,
-            left: isMobile ? -8 : -32,
-            width: isMobile ? 110 : 180,
-            aspectRatio: '1/1', borderRadius: 'var(--r-lg)', overflow: 'hidden',
-            background: `url(${UNSPLASH.hands}) center/cover`,
-            boxShadow: '0 20px 50px -20px rgba(74,40,24,.4)',
-            transform: 'rotate(-4deg)',
-            border: '6px solid var(--c-bg)',
-          }} />
-          <div style={{
-            position: 'absolute',
-            top: isMobile ? 12 : 24,
-            right: isMobile ? 8 : -16,
-            background: 'var(--c-paper)',
-            padding: isMobile ? '10px 14px' : '14px 18px', borderRadius: 'var(--r-md)',
-            border: '1px solid var(--c-line)', maxWidth: isMobile ? 160 : 200,
-            boxShadow: '0 10px 30px -10px rgba(74,40,24,.3)',
-            transform: 'rotate(3deg)',
+            paddingTop: isMobile ? 20 : 28,
+            paddingLeft: isMobile ? 0 : 24,
+            borderTop: '1px solid var(--c-line)',
+            display: 'flex', alignItems: 'baseline', gap: 14,
+            flexWrap: 'wrap',
           }}>
-            <Script size={isMobile ? 22 : 28}>finca en Fusagasugá</Script>
-            <div style={{ fontFamily: 'var(--t-sans)', fontSize: isMobile ? 10 : 11, color: 'var(--c-ink-mute)', marginTop: 4 }}>
+            <Script size={isMobile ? 26 : 32} style={{ flex: '0 0 auto' }}>
+              finca en Fusagasugá
+            </Script>
+            <div style={{
+              fontFamily: 'var(--t-sans)', fontSize: 11,
+              letterSpacing: '.18em', textTransform: 'uppercase',
+              color: 'var(--c-ink-mute)',
+            }}>
               Cundinamarca · 1.700 m.s.n.m
             </div>
           </div>
