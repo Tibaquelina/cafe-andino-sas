@@ -82,6 +82,20 @@
   [data-theme="dark"] .grain { mix-blend-mode: screen; opacity: .15; }
 
   #root { position: relative; z-index: 2; }
+
+  /* ── Responsive base ──────────────────────────────────────────────
+     Aplica a TODO el sitio. Las secciones también usan useMediaQuery
+     para pivotar layout (grids 2/3/4 col → 1 col en móvil, etc.). */
+  html { scroll-behavior: smooth; }
+
+  /* Imágenes nunca exceden su contenedor */
+  img, svg { max-width: 100%; height: auto; }
+
+  /* Tablet */
+  @media (max-width: 1023px) { body { font-size: 15px; } }
+  /* Móvil */
+  @media (max-width: 768px)  { body { font-size: 14.5px; line-height: 1.5; } }
+  @media (max-width: 480px)  { body { font-size: 14px; } }
 </style>
 </head>
 <body>

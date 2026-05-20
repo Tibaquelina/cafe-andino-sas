@@ -561,8 +561,26 @@ function TweakButton({ label, onClick, secondary = false }) {
   );
 }
 
+// ── useMediaQuery ───────────────────────────────────────────────────────────
+// Observa una media query CSS y se re-renderiza al cambiar el viewport.
+// Patrón de uso:
+//   const isMobile = useMediaQuery('(max-width: 768px)');
+//   const cols = isMobile ? '1fr' : '1fr 1fr';
+function useMediaQuery(query) {
+  const get = () => typeof window !== 'undefined'
+    && window.matchMedia(query).matches;
+  const [matches, setMatches] = React.useState(get);
+  React.useEffect(() => {
+    const mql = window.matchMedia(query);
+    const onChange = (e) => setMatches(e.matches);
+    mql.addEventListener('change', onChange);
+    return () => mql.removeEventListener('change', onChange);
+  }, [query]);
+  return matches;
+}
+
 Object.assign(window, {
-  useTweaks, TweaksPanel, TweakSection, TweakRow,
+  useTweaks, useMediaQuery, TweaksPanel, TweakSection, TweakRow,
   TweakSlider, TweakToggle, TweakRadio, TweakSelect,
   TweakText, TweakNumber, TweakColor, TweakButton,
 });

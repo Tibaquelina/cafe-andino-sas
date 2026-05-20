@@ -91,6 +91,11 @@ function Header({ ctaStyle, onToggleTheme, theme }) {
     { label: 'Tienda', href: '#tienda' },
     { label: 'Contacto', href: '#contacto' },
   ];
+  const isMobile = useMediaQuery('(max-width: 900px)');
+  const [open, setOpen] = React.useState(false);
+  // Cierra el menú al cambiar a desktop o al navegar a una sección
+  React.useEffect(() => { if (!isMobile) setOpen(false); }, [isMobile]);
+
   return (
     <header data-screen-label="Header" style={{
       position: 'sticky', top: 0, zIndex: 50,
@@ -101,72 +106,142 @@ function Header({ ctaStyle, onToggleTheme, theme }) {
     }}>
       <div style={{
         maxWidth: 1280, margin: '0 auto',
-        padding: '14px 32px',
-        display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 24,
+        padding: isMobile ? '12px 18px' : '14px 32px',
+        display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: isMobile ? 12 : 24,
       }}>
-        <a href="#inicio"><Logo size={44} /></a>
+        <a href="#inicio"><Logo size={isMobile ? 36 : 44} /></a>
 
-        <nav style={{ display: 'flex', gap: 28, fontFamily: 'var(--t-sans)', fontSize: 13.5, fontWeight: 500 }}>
-          {links.map(l => (
-            <a key={l.href} href={l.href} style={{
-              color: 'var(--c-ink-soft)', position: 'relative', padding: '4px 0',
-            }}>{l.label}</a>
-          ))}
-        </nav>
+        {!isMobile && (
+          <nav style={{ display: 'flex', gap: 28, fontFamily: 'var(--t-sans)', fontSize: 13.5, fontWeight: 500 }}>
+            {links.map(l => (
+              <a key={l.href} href={l.href} style={{
+                color: 'var(--c-ink-soft)', position: 'relative', padding: '4px 0',
+              }}>{l.label}</a>
+            ))}
+          </nav>
+        )}
 
-        <div style={{ display: 'flex', gap: 12, alignItems: 'center' }}>
+        <div style={{ display: 'flex', gap: isMobile ? 8 : 12, alignItems: 'center' }}>
           <button onClick={onToggleTheme} aria-label="Cambiar tema" style={{
             background: 'transparent', border: '1px solid var(--c-line)', borderRadius: 999,
             width: 36, height: 36, display: 'grid', placeItems: 'center', color: 'var(--c-ink-soft)',
           }}>
             {theme === 'dark' ? '☾' : '☀'}
           </button>
-          <CTA variant="solid" ctaStyle={ctaStyle} size="sm" as="a" href="#tienda">
-            Comprar café →
-          </CTA>
+          {!isMobile && (
+            <CTA variant="solid" ctaStyle={ctaStyle} size="sm" as="a" href="#tienda">
+              Comprar café →
+            </CTA>
+          )}
+          {isMobile && (
+            <button onClick={() => setOpen(o => !o)} aria-label="Abrir menú"
+              aria-expanded={open} style={{
+                background: 'transparent', border: '1px solid var(--c-line)',
+                borderRadius: 8, width: 40, height: 36,
+                display: 'grid', placeItems: 'center', color: 'var(--c-ink)',
+                padding: 0,
+              }}>
+              <span style={{
+                display: 'inline-block', width: 18, height: 12, position: 'relative',
+              }}>
+                <span style={{
+                  position: 'absolute', left: 0, right: 0, height: 1.5,
+                  background: 'currentColor',
+                  top: open ? 5 : 0, transform: open ? 'rotate(45deg)' : 'none',
+                  transition: 'transform .2s ease, top .2s ease, opacity .2s ease',
+                }} />
+                <span style={{
+                  position: 'absolute', left: 0, right: 0, height: 1.5,
+                  background: 'currentColor', top: 5,
+                  opacity: open ? 0 : 1,
+                  transition: 'opacity .15s ease',
+                }} />
+                <span style={{
+                  position: 'absolute', left: 0, right: 0, height: 1.5,
+                  background: 'currentColor',
+                  top: open ? 5 : 10, transform: open ? 'rotate(-45deg)' : 'none',
+                  transition: 'transform .2s ease, top .2s ease',
+                }} />
+              </span>
+            </button>
+          )}
         </div>
       </div>
+
+      {/* Panel móvil — slide-down con links */}
+      {isMobile && open && (
+        <div style={{
+          borderTop: '1px solid var(--c-line-soft)',
+          background: 'var(--c-bg)',
+          padding: '14px 18px 20px',
+        }}>
+          <nav style={{ display: 'grid', gap: 4, fontFamily: 'var(--t-sans)' }}>
+            {links.map(l => (
+              <a key={l.href} href={l.href} onClick={() => setOpen(false)} style={{
+                color: 'var(--c-ink)', padding: '12px 4px',
+                fontSize: 17, fontWeight: 500,
+                borderBottom: '1px solid var(--c-line-soft)',
+              }}>{l.label}</a>
+            ))}
+          </nav>
+          <div style={{ marginTop: 18 }}>
+            <CTA variant="solid" ctaStyle={ctaStyle} size="md" as="a" href="#tienda"
+              onClick={() => setOpen(false)}>
+              Comprar café →
+            </CTA>
+          </div>
+        </div>
+      )}
     </header>
   );
 }
 
 // ─── 2. Hero — 3 variantes ──────────────────────────────────────────
 function HeroEditorial({ ctaStyle }) {
+  const isMobile = useMediaQuery('(max-width: 900px)');
   return (
     <section data-screen-label="Hero · Editorial" id="inicio" style={{
       maxWidth: 1280, margin: '0 auto',
-      padding: '48px 32px 80px',
+      padding: isMobile ? '32px 18px 56px' : '48px 32px 80px',
     }}>
       <div style={{
-        display: 'grid', gridTemplateColumns: '1.1fr .9fr', gap: 48, alignItems: 'center',
+        display: 'grid',
+        gridTemplateColumns: isMobile ? '1fr' : '1.1fr .9fr',
+        gap: isMobile ? 40 : 48,
+        alignItems: 'center',
       }}>
         <div>
           <Eyebrow>Origen Colombia · Desde la cordillera</Eyebrow>
           <h1 style={{
-            fontFamily: 'var(--t-display)', fontSize: 'clamp(56px, 8vw, 112px)',
+            fontFamily: 'var(--t-display)', fontSize: 'clamp(42px, 8vw, 112px)',
             fontWeight: 400, lineHeight: .92, letterSpacing: '-.015em',
             margin: '20px 0 0', color: 'var(--c-ink)', textWrap: 'balance',
           }}>
             De nuestra<br/>
-            tierra <Script size={92} style={{ color: 'var(--c-accent)' }}>&amp;</Script> raíces<br/>
+            tierra <Script size={isMobile ? 56 : 92} style={{ color: 'var(--c-accent)' }}>&amp;</Script> raíces<br/>
             <em style={{ fontStyle: 'italic', color: 'var(--c-accent-deep)' }}>a tu mesa.</em>
           </h1>
           <p style={{
-            fontFamily: 'var(--t-serif)', fontSize: 21, lineHeight: 1.5,
-            color: 'var(--c-ink-soft)', maxWidth: 520, margin: '28px 0 36px',
+            fontFamily: 'var(--t-serif)', fontSize: isMobile ? 17 : 21, lineHeight: 1.5,
+            color: 'var(--c-ink-soft)', maxWidth: 520,
+            margin: isMobile ? '20px 0 28px' : '28px 0 36px',
             fontStyle: 'italic',
           }}>
             Producimos y comercializamos café de alta calidad para los hogares colombianos —
             especial, tradicional e instantáneo. Lo mejor de nuestra tierra, raíces y gastronomía.
           </p>
           <div style={{ display: 'flex', gap: 14, alignItems: 'center', flexWrap: 'wrap' }}>
-            <CTA variant="solid" ctaStyle={ctaStyle} size="lg" as="a" href="#tienda">Conocer la cosecha</CTA>
-            <CTA variant="ghost" ctaStyle={ctaStyle} size="lg" as="a" href="#nosotros">Nuestra historia</CTA>
+            <CTA variant="solid" ctaStyle={ctaStyle} size={isMobile ? 'md' : 'lg'} as="a" href="#tienda">Conocer la cosecha</CTA>
+            <CTA variant="ghost" ctaStyle={ctaStyle} size={isMobile ? 'md' : 'lg'} as="a" href="#nosotros">Nuestra historia</CTA>
           </div>
 
           <div style={{
-            marginTop: 64, paddingTop: 28, borderTop: '1px solid var(--c-line)',
-            display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 24,
+            marginTop: isMobile ? 40 : 64,
+            paddingTop: isMobile ? 20 : 28,
+            borderTop: '1px solid var(--c-line)',
+            display: 'grid',
+            gridTemplateColumns: isMobile ? 'repeat(2, 1fr)' : 'repeat(3, 1fr)',
+            gap: isMobile ? 20 : 24,
           }}>
             {[
               ['100%', 'Café colombiano'],
@@ -181,31 +256,37 @@ function HeroEditorial({ ctaStyle }) {
           </div>
         </div>
 
-        <div style={{ position: 'relative' }}>
+        <div style={{ position: 'relative', marginBottom: isMobile ? 32 : 0 }}>
           <div style={{
-            aspectRatio: '4/5', borderRadius: 'var(--r-lg)', overflow: 'hidden',
+            aspectRatio: isMobile ? '4/3' : '4/5',
+            borderRadius: 'var(--r-lg)', overflow: 'hidden',
             background: `url(${UNSPLASH.hero1}) center/cover`,
             boxShadow: '0 30px 80px -30px rgba(74,40,24,.45)',
-            transform: 'rotate(1.5deg)',
+            transform: isMobile ? 'none' : 'rotate(1.5deg)',
           }} />
           <div style={{
-            position: 'absolute', bottom: -28, left: -32,
-            width: 180, aspectRatio: '1/1', borderRadius: 'var(--r-lg)', overflow: 'hidden',
+            position: 'absolute',
+            bottom: isMobile ? -20 : -28,
+            left: isMobile ? -8 : -32,
+            width: isMobile ? 110 : 180,
+            aspectRatio: '1/1', borderRadius: 'var(--r-lg)', overflow: 'hidden',
             background: `url(${UNSPLASH.hands}) center/cover`,
             boxShadow: '0 20px 50px -20px rgba(74,40,24,.4)',
             transform: 'rotate(-4deg)',
             border: '6px solid var(--c-bg)',
           }} />
           <div style={{
-            position: 'absolute', top: 24, right: -16,
+            position: 'absolute',
+            top: isMobile ? 12 : 24,
+            right: isMobile ? 8 : -16,
             background: 'var(--c-paper)',
-            padding: '14px 18px', borderRadius: 'var(--r-md)',
-            border: '1px solid var(--c-line)', maxWidth: 200,
+            padding: isMobile ? '10px 14px' : '14px 18px', borderRadius: 'var(--r-md)',
+            border: '1px solid var(--c-line)', maxWidth: isMobile ? 160 : 200,
             boxShadow: '0 10px 30px -10px rgba(74,40,24,.3)',
             transform: 'rotate(3deg)',
           }}>
-            <Script size={28}>finca en Fusagasugá</Script>
-            <div style={{ fontFamily: 'var(--t-sans)', fontSize: 11, color: 'var(--c-ink-mute)', marginTop: 4 }}>
+            <Script size={isMobile ? 22 : 28}>finca en Fusagasugá</Script>
+            <div style={{ fontFamily: 'var(--t-sans)', fontSize: isMobile ? 10 : 11, color: 'var(--c-ink-mute)', marginTop: 4 }}>
               Cundinamarca · 1.700 m.s.n.m
             </div>
           </div>
@@ -216,22 +297,24 @@ function HeroEditorial({ ctaStyle }) {
 }
 
 function HeroFullBleed({ ctaStyle }) {
+  const isMobile = useMediaQuery('(max-width: 768px)');
   return (
     <section data-screen-label="Hero · Full bleed" id="inicio" style={{
       position: 'relative',
-      minHeight: '88vh',
+      minHeight: isMobile ? '70vh' : '88vh',
       backgroundImage: `linear-gradient(rgba(26,16,8,.55), rgba(26,16,8,.7)), url(${UNSPLASH.farm})`,
       backgroundSize: 'cover', backgroundPosition: 'center',
       color: '#f4e8d4',
       display: 'flex', alignItems: 'flex-end',
     }}>
       <div style={{
-        maxWidth: 1280, width: '100%', margin: '0 auto', padding: '120px 32px 64px',
+        maxWidth: 1280, width: '100%', margin: '0 auto',
+        padding: isMobile ? '72px 18px 48px' : '120px 32px 64px',
       }}>
         <Eyebrow style={{ color: 'var(--c-cream)' }}>Café 100% colombiano</Eyebrow>
         <h1 style={{
-          fontFamily: 'var(--t-display)', fontSize: 'clamp(64px, 10vw, 156px)',
-          fontWeight: 400, lineHeight: .9, margin: '24px 0 0', letterSpacing: '-.02em',
+          fontFamily: 'var(--t-display)', fontSize: 'clamp(44px, 10vw, 156px)',
+          fontWeight: 400, lineHeight: .9, margin: '20px 0 0', letterSpacing: '-.02em',
           color: '#f4e8d4', maxWidth: 1100,
         }}>
           De nuestra tierra<br/>
@@ -239,15 +322,16 @@ function HeroFullBleed({ ctaStyle }) {
         </h1>
         <p style={{
           fontFamily: 'var(--t-serif)', fontStyle: 'italic',
-          fontSize: 22, maxWidth: 580, margin: '32px 0 40px', lineHeight: 1.5,
+          fontSize: isMobile ? 17 : 22, maxWidth: 580,
+          margin: isMobile ? '20px 0 28px' : '32px 0 40px', lineHeight: 1.5,
           color: 'rgba(244,232,212,.85)',
         }}>
           Café especial, tradicional e instantáneo, cultivado en las montañas de Colombia
           por más de 1.300 caficultores aliados.
         </p>
         <div style={{ display: 'flex', gap: 14, flexWrap: 'wrap' }}>
-          <CTA variant="cream" ctaStyle={ctaStyle} size="lg" as="a" href="#tienda">Comprar nuestro café</CTA>
-          <CTA variant="outline" ctaStyle={ctaStyle} size="lg" as="a" href="#proceso"
+          <CTA variant="cream" ctaStyle={ctaStyle} size={isMobile ? 'md' : 'lg'} as="a" href="#tienda">Comprar nuestro café</CTA>
+          <CTA variant="outline" ctaStyle={ctaStyle} size={isMobile ? 'md' : 'lg'} as="a" href="#proceso"
                style={{ color: '#f4e8d4', borderColor: 'rgba(244,232,212,.6)' }}>
             Ver el proceso
           </CTA>
@@ -258,13 +342,16 @@ function HeroFullBleed({ ctaStyle }) {
 }
 
 function HeroSplit({ ctaStyle }) {
+  const isMobile = useMediaQuery('(max-width: 900px)');
   return (
     <section data-screen-label="Hero · Split" id="inicio" style={{
-      display: 'grid', gridTemplateColumns: '1fr 1fr', minHeight: '88vh',
+      display: 'grid',
+      gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr',
+      minHeight: isMobile ? 'auto' : '88vh',
     }}>
       <div style={{
         background: 'var(--c-paper)',
-        padding: '80px 64px',
+        padding: isMobile ? '56px 22px' : '80px 64px',
         display: 'flex', flexDirection: 'column', justifyContent: 'center',
       }}>
         <Eyebrow>Est. en Colombia</Eyebrow>
@@ -305,10 +392,15 @@ function HeroSplit({ ctaStyle }) {
       <div style={{
         background: `url(${UNSPLASH.hero2}) center/cover`,
         position: 'relative',
+        minHeight: isMobile ? 360 : 'auto',
       }}>
         <div style={{
-          position: 'absolute', bottom: 32, left: 32,
-          background: 'var(--c-paper)', padding: '20px 24px', maxWidth: 280,
+          position: 'absolute',
+          bottom: isMobile ? 18 : 32,
+          left: isMobile ? 18 : 32,
+          background: 'var(--c-paper)',
+          padding: isMobile ? '14px 18px' : '20px 24px',
+          maxWidth: isMobile ? 240 : 280,
           borderRadius: 'var(--r-md)',
           boxShadow: '0 20px 40px -10px rgba(0,0,0,.3)',
         }}>
@@ -324,16 +416,22 @@ function HeroSplit({ ctaStyle }) {
 
 // ─── 3. Quiénes somos ───────────────────────────────────────────────
 function Nosotros() {
+  const isMobile = useMediaQuery('(max-width: 900px)');
   return (
     <section data-screen-label="Nosotros" id="nosotros" style={{
       background: 'var(--c-bg-warm)',
-      padding: '120px 32px',
+      padding: isMobile ? '72px 18px' : '120px 32px',
       borderTop: '1px solid var(--c-line-soft)',
       borderBottom: '1px solid var(--c-line-soft)',
     }}>
       <div style={{ maxWidth: 1280, margin: '0 auto' }}>
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1.4fr', gap: 80, alignItems: 'start' }}>
-          <div style={{ position: 'sticky', top: 100 }}>
+        <div style={{
+          display: 'grid',
+          gridTemplateColumns: isMobile ? '1fr' : '1fr 1.4fr',
+          gap: isMobile ? 48 : 80,
+          alignItems: 'start',
+        }}>
+          <div style={isMobile ? {} : { position: 'sticky', top: 100 }}>
             <Eyebrow>Quiénes somos</Eyebrow>
             <h2 style={{
               fontFamily: 'var(--t-display)', fontSize: 'clamp(40px, 5vw, 64px)',
@@ -422,6 +520,7 @@ function Nosotros() {
 
 // ─── 4. Valores ─────────────────────────────────────────────────────
 function Valores() {
+  const isMobile = useMediaQuery('(max-width: 768px)');
   const valores = [
     { word: 'Vida', desc: 'Apoyamos el bienestar de nuestros colaboradores, clientes internos y externos.', icon: 'V' },
     { word: 'Honestidad', desc: 'Somos una empresa transparente y clara con nuestro país.', icon: 'H' },
@@ -432,7 +531,7 @@ function Valores() {
 
   return (
     <section data-screen-label="Valores" style={{
-      padding: '120px 32px',
+      padding: isMobile ? '72px 18px' : '120px 32px',
       background: 'var(--c-roast)',
       color: 'var(--c-paper)',
       position: 'relative', overflow: 'hidden',
@@ -449,10 +548,10 @@ function Valores() {
       </svg>
 
       <div style={{ maxWidth: 1280, margin: '0 auto', position: 'relative' }}>
-        <div style={{ maxWidth: 720, marginBottom: 80 }}>
+        <div style={{ maxWidth: 720, marginBottom: isMobile ? 48 : 80 }}>
           <Eyebrow style={{ color: 'var(--c-cream)' }}>Nuestros valores</Eyebrow>
           <h2 style={{
-            fontFamily: 'var(--t-display)', fontSize: 'clamp(40px, 5vw, 72px)',
+            fontFamily: 'var(--t-display)', fontSize: 'clamp(34px, 5vw, 72px)',
             fontWeight: 400, lineHeight: 1, margin: '20px 0 24px',
             color: 'var(--c-paper)', letterSpacing: '-.01em',
           }}>
@@ -460,7 +559,7 @@ function Valores() {
             <em style={{ color: 'var(--c-cream)' }}>guían cada cosecha.</em>
           </h2>
           <p style={{
-            fontFamily: 'var(--t-serif)', fontStyle: 'italic', fontSize: 20,
+            fontFamily: 'var(--t-serif)', fontStyle: 'italic', fontSize: isMobile ? 16 : 20,
             lineHeight: 1.55, color: 'rgba(244,232,212,.78)',
           }}>
             No son sólo palabras impresas en una pared. Son el filtro por el que pasa cada
@@ -469,14 +568,15 @@ function Valores() {
         </div>
 
         <div style={{
-          display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))',
+          display: 'grid',
+          gridTemplateColumns: isMobile ? '1fr' : 'repeat(auto-fit, minmax(260px, 1fr))',
           gap: 0, borderTop: '1px solid rgba(244,232,212,.18)',
         }}>
           {valores.map((v, i) => (
             <article key={v.word} style={{
-              padding: '40px 28px',
+              padding: isMobile ? '28px 4px' : '40px 28px',
               borderBottom: '1px solid rgba(244,232,212,.18)',
-              borderRight: i < valores.length - 1 ? '1px solid rgba(244,232,212,.18)' : 'none',
+              borderRight: !isMobile && i < valores.length - 1 ? '1px solid rgba(244,232,212,.18)' : 'none',
               position: 'relative',
             }}>
               <div style={{
@@ -486,7 +586,7 @@ function Valores() {
               }}>0{i + 1} / 0{valores.length}</div>
 
               <h3 style={{
-                fontFamily: 'var(--t-display)', fontSize: 44, fontWeight: 400,
+                fontFamily: 'var(--t-display)', fontSize: isMobile ? 36 : 44, fontWeight: 400,
                 margin: '0 0 4px', color: 'var(--c-cream)',
               }}>{v.word}</h3>
               <Script size={22} style={{ color: 'var(--c-cream)', opacity: .55 }}>
@@ -506,6 +606,7 @@ function Valores() {
 
 // ─── 5. Productos ───────────────────────────────────────────────────
 function Productos() {
+  const isMobile = useMediaQuery('(max-width: 768px)');
   const productos = [
     {
       tag: 'Línea Premium', name: 'Café Especial', sub: 'Andino Origen',
@@ -528,9 +629,11 @@ function Productos() {
   ];
 
   return (
-    <section data-screen-label="Productos" id="productos" style={{ padding: '72px 32px 120px' }}>
+    <section data-screen-label="Productos" id="productos" style={{
+      padding: isMobile ? '48px 18px 72px' : '72px 32px 120px',
+    }}>
       <div style={{ maxWidth: 1280, margin: '0 auto' }}>
-        <div style={{ marginBottom: 96 }}>
+        <div style={{ marginBottom: isMobile ? 56 : 96 }}>
           <Eyebrow>Nuestros productos</Eyebrow>
           <h2 style={{
             fontFamily: 'var(--t-display)', fontSize: 'clamp(40px, 5vw, 64px)',
@@ -625,6 +728,8 @@ function Productos() {
 
 // ─── 6. Proceso / Galería ───────────────────────────────────────────
 function Proceso() {
+  const isMobile = useMediaQuery('(max-width: 600px)');
+  const isTablet = useMediaQuery('(max-width: 900px)');
   const pasos = [
     { n: '01', titulo: 'Siembra', desc: 'A más de 1.500 m.s.n.m. en suelos volcánicos.', img: UNSPLASH.process1 },
     { n: '02', titulo: 'Recolección', desc: 'Cereza por cereza, a mano, en su punto exacto.', img: UNSPLASH.process2 },
@@ -635,15 +740,15 @@ function Proceso() {
   return (
     <section data-screen-label="Proceso" id="proceso" style={{
       background: 'var(--c-bg-warm)',
-      padding: '120px 32px',
+      padding: isMobile ? '64px 18px' : '120px 32px',
       borderTop: '1px solid var(--c-line-soft)',
       borderBottom: '1px solid var(--c-line-soft)',
     }}>
       <div style={{ maxWidth: 1280, margin: '0 auto' }}>
-        <div style={{ textAlign: 'center', marginBottom: 72 }}>
+        <div style={{ textAlign: 'center', marginBottom: isMobile ? 40 : 72 }}>
           <Eyebrow>De la semilla a tu mesa</Eyebrow>
           <h2 style={{
-            fontFamily: 'var(--t-display)', fontSize: 'clamp(40px, 5vw, 72px)',
+            fontFamily: 'var(--t-display)', fontSize: 'clamp(32px, 5vw, 72px)',
             fontWeight: 400, lineHeight: 1, letterSpacing: '-.01em',
             margin: '20px auto 0', color: 'var(--c-ink)', maxWidth: 900,
           }}>
@@ -652,11 +757,14 @@ function Proceso() {
         </div>
 
         <div style={{
-          display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 24,
+          display: 'grid',
+          gridTemplateColumns: isMobile ? '1fr' : isTablet ? 'repeat(2, 1fr)' : 'repeat(4, 1fr)',
+          gap: isMobile ? 32 : 24,
         }}>
           {pasos.map((p, i) => (
             <article key={p.n} style={{
-              transform: i % 2 === 0 ? 'translateY(0)' : 'translateY(48px)',
+              // El zigzag (offset vertical) solo en desktop, donde tiene sentido visual
+              transform: !isTablet && i % 2 !== 0 ? 'translateY(48px)' : 'none',
             }}>
               <div style={{
                 aspectRatio: '3/4',
@@ -686,17 +794,21 @@ function Proceso() {
 
 // ─── 7. Tienda destacada ────────────────────────────────────────────
 function Tienda() {
+  const isMobile = useMediaQuery('(max-width: 900px)');
   return (
     <section data-screen-label="Tienda" id="tienda" style={{
-      padding: '120px 32px', background: 'var(--c-bg)',
+      padding: isMobile ? '64px 18px' : '120px 32px', background: 'var(--c-bg)',
     }}>
       <div style={{
         maxWidth: 1280, margin: '0 auto',
         background: 'var(--c-paper)',
         borderRadius: 'var(--r-lg)',
-        padding: '72px 64px',
+        padding: isMobile ? '40px 24px' : '72px 64px',
         border: '1px solid var(--c-line)',
-        display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 64, alignItems: 'center',
+        display: 'grid',
+        gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr',
+        gap: isMobile ? 48 : 64,
+        alignItems: 'center',
       }}>
         <div>
           <Eyebrow>Tienda online</Eyebrow>
@@ -766,18 +878,19 @@ function Tienda() {
 
 // ─── 9. Contacto / Newsletter ───────────────────────────────────────
 function Contacto({ ctaStyle }) {
+  const isMobile = useMediaQuery('(max-width: 600px)');
   return (
     <section data-screen-label="Contacto" id="contacto" style={{
       background: 'var(--c-accent-deep)',
       color: 'var(--c-cream)',
-      padding: '120px 32px',
+      padding: isMobile ? '64px 18px' : '120px 32px',
     }}>
       <div style={{
         maxWidth: 900, margin: '0 auto', textAlign: 'center',
       }}>
-        <Script size={36} style={{ color: 'var(--c-cream)' }}>únete a la mesa</Script>
+        <Script size={isMobile ? 28 : 36} style={{ color: 'var(--c-cream)' }}>únete a la mesa</Script>
         <h2 style={{
-          fontFamily: 'var(--t-display)', fontSize: 'clamp(40px, 5.5vw, 80px)',
+          fontFamily: 'var(--t-display)', fontSize: 'clamp(34px, 5.5vw, 80px)',
           fontWeight: 400, lineHeight: 1, margin: '12px 0 24px',
           color: 'var(--c-cream)', letterSpacing: '-.01em',
         }}>
@@ -785,17 +898,22 @@ function Contacto({ ctaStyle }) {
           <em>cosechas en primicia.</em>
         </h2>
         <p style={{
-          fontFamily: 'var(--t-serif)', fontStyle: 'italic', fontSize: 20,
-          lineHeight: 1.55, color: 'rgba(217,179,130,.8)', marginBottom: 40,
+          fontFamily: 'var(--t-serif)', fontStyle: 'italic', fontSize: isMobile ? 16 : 20,
+          lineHeight: 1.55, color: 'rgba(217,179,130,.8)', marginBottom: isMobile ? 28 : 40,
           maxWidth: 600, marginLeft: 'auto', marginRight: 'auto',
         }}>
           Notas de cata, lanzamientos y descuentos exclusivos. Una carta al mes — nada más.
         </p>
 
         <form style={{
-          display: 'flex', gap: 0, maxWidth: 480, margin: '0 auto',
-          background: 'var(--c-paper)', borderRadius: ctaStyle === 'pill' ? 999 : 10,
-          padding: 6, boxShadow: '0 20px 40px -10px rgba(0,0,0,.4)',
+          display: 'flex',
+          flexDirection: isMobile ? 'column' : 'row',
+          gap: isMobile ? 10 : 0,
+          maxWidth: 480, margin: '0 auto',
+          background: isMobile ? 'transparent' : 'var(--c-paper)',
+          borderRadius: ctaStyle === 'pill' ? 999 : 10,
+          padding: isMobile ? 0 : 6,
+          boxShadow: isMobile ? 'none' : '0 20px 40px -10px rgba(0,0,0,.4)',
         }} onSubmit={e => e.preventDefault()}>
           <input
             type="email" placeholder="tu@correo.com"
@@ -816,15 +934,22 @@ function Contacto({ ctaStyle }) {
 
 // ─── 10. Footer ─────────────────────────────────────────────────────
 function Footer() {
+  const isMobile = useMediaQuery('(max-width: 600px)');
+  const isTablet = useMediaQuery('(max-width: 900px)');
   return (
     <footer data-screen-label="Footer" style={{
       background: 'var(--c-roast)', color: 'rgba(244,232,212,.7)',
-      padding: '64px 32px 32px',
+      padding: isMobile ? '48px 18px 24px' : '64px 32px 32px',
     }}>
       <div style={{ maxWidth: 1280, margin: '0 auto' }}>
         <div style={{
-          display: 'grid', gridTemplateColumns: '1.4fr 1fr 1fr 1fr', gap: 48,
-          paddingBottom: 48, borderBottom: '1px solid rgba(244,232,212,.15)',
+          display: 'grid',
+          gridTemplateColumns: isMobile
+            ? '1fr'
+            : isTablet ? '1fr 1fr' : '1.4fr 1fr 1fr 1fr',
+          gap: isMobile ? 32 : 48,
+          paddingBottom: isMobile ? 32 : 48,
+          borderBottom: '1px solid rgba(244,232,212,.15)',
         }}>
           <div>
             <Logo size={48} color="var(--c-cream)" />
